@@ -14,7 +14,7 @@ node {
     stage("Compile Source and Scan"){
         try {
             bat "\"C:\\Program Files\\dotnet\\dotnet\" restore"
-            bat "\"C:\\Program Files\\dotnet\\dotnet sonarscanner\" begin /k:\"peopleapi\" /d:sonar.login=\"1d62160d545c0bd72ec48737ba46219a9d0ea4bb\" /d:sonar.host.url=\"http://localhost:9000\""
+            bat "\"C:\\Program Files\\dotnet\\dotnet\" sonarscanner begin /k:\"peopleapi\" /d:sonar.login=\"1d62160d545c0bd72ec48737ba46219a9d0ea4bb\" /d:sonar.host.url=\"http://localhost:9000\""
             bat "\"C:\\Program Files\\dotnet\\dotnet\" build"
             bat "\"C:\\Program Files\\dotnet\\dotnet\" sonarscanner end /d:sonar.login=\"1d62160d545c0bd72ec48737ba46219a9d0ea4bb\""
         } catch(error){
