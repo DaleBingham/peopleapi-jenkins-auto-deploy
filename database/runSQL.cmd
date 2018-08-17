@@ -1,0 +1,1 @@
+docker run -d -p 1433:1433 --rm --name personapi-db personapi-db
