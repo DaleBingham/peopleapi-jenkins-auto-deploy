@@ -12,6 +12,6 @@ ENV MSSQL_SA_PASSWORD=mysapwdn0tGo0d!
 ENV ACCEPT_EULA=Y
 ENV MSSQL_PID=Express
 
-RUN /opt/mssql/bin/sqlservr --accept-eula & sleep 10 \
+RUN /opt/mssql/bin/sqlservr --accept-eula & sleep 30 \
     && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'mysapwdn0tGo0d!' -i /opt/dbscripts/dbcreate.sql \
     && pkill sqlservr 
