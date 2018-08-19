@@ -2,15 +2,15 @@ version : '3'
  
 services:
   peopleapi:
-    image: peopleapi
+    image: people-api-pipeline
     ports:
       - 9004:8080
     environment:
-      - peopleapi-context=server=peopleapidb;user id=peopleAPI;password=myP@ssw0rd;Database=peopleAPI
+      - peopleapicontext=server=people-api-db-pipeline;user id=peopleAPI;password=myP@ssw0rd;Database=peopleAPI
     depends_on:
-      - peopleapidb
+      - people-api-db-pipeline
   
-  peopleapidb:
-    image: peopleapidb
+  people-api-db-pipeline:
+    image: people-api-db-pipeline
     ports:
       - 1433

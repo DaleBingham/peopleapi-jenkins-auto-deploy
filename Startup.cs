@@ -29,7 +29,7 @@ namespace peopleapi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<peopleAPIContext>(options => 
-             options.UseSqlServer(Environment.GetEnvironmentVariable("peopleapi-context")));
+             options.UseSqlServer(Environment.GetEnvironmentVariable("peopleapicontext")));
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
