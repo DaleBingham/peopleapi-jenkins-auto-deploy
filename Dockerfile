@@ -2,6 +2,8 @@ FROM microsoft/dotnet:sdk AS build-env
 ENV ASPNETCORE_ENVIRONMENT Testing
 WORKDIR /app/
 
+RUN yum -y install ca-certificates
+
 # copy the project and restore as distinct layers in the image
 COPY *.csproj ./
 RUN dotnet restore

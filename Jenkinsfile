@@ -11,12 +11,12 @@ node {
         checkout scm
     }
 
-    stage("Compile Source and Scan"){
+    stage("Compile Source"){
         try {
             bat "\"C:\\Program Files\\dotnet\\dotnet\" restore"
-            bat "\"C:\\Program Files\\dotnet\\dotnet\" sonarscanner begin /k:\"peopleapi\" /d:sonar.login=\"1d62160d545c0bd72ec48737ba46219a9d0ea4bb\" /d:sonar.host.url=\"http://localhost:9000\""
+            //bat "\"C:\\Program Files\\dotnet\\dotnet\" sonarscanner begin /k:\"peopleapi\" /d:sonar.login=\"1d62160d545c0bd72ec48737ba46219a9d0ea4bb\" /d:sonar.host.url=\"http://localhost:9000\""
             bat "\"C:\\Program Files\\dotnet\\dotnet\" build"
-            bat "\"C:\\Program Files\\dotnet\\dotnet\" sonarscanner end /d:sonar.login=\"1d62160d545c0bd72ec48737ba46219a9d0ea4bb\""
+            //bat "\"C:\\Program Files\\dotnet\\dotnet\" sonarscanner end /d:sonar.login=\"1d62160d545c0bd72ec48737ba46219a9d0ea4bb\""
         } catch(error){
             echo "The .NET Core 2.x compile failed with ${error}"
         }
@@ -35,6 +35,14 @@ node {
         imageBuild(CONTAINER_NAME, CONTAINER_TAG, ".")
     }
 
+    stage('Aqua MicroScanner for DB Image'){
+        aquaMicroscanner imageName: CONTAINER_DB_NAME, notCompliesCmd: 'exit 1', onDisallowed: 'fail'
+    }
+
+    stage('Aqua MicroScanner for App Image'){
+        aquaMicroscanner imageName: CONTAINER_NAME, notCompliesCmd: 'exit 1', onDisallowed: 'fail'
+    }
+    
     stage('Push DB to OpenShift Registry'){
         withCredentials([usernamePassword(credentialsId: 'openshift-docker-registry-account', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             pushToImage(OPENSHIFT_IP,OPENSHIFT_PROJECT_NAME, CONTAINER_DB_NAME, CONTAINER_DB_TAG, USERNAME, PASSWORD)
