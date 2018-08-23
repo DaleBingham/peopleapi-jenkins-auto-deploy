@@ -64,7 +64,7 @@ def imagePrune(containerName){
 }
 
 def imageBuild(containerName, tag, pathToDockerfile){
-    bat "\"C:\\Program Files\\Docker\\Docker\\Resources\\bin\\docker\" build -t $containerName:$tag --pull --no-cache $pathToDockerfile"
+    bat "\"C:\\Program Files\\Docker\\Docker\\Resources\\bin\\docker\" build -t $containerName:$tag --pull $pathToDockerfile"
     echo "Image build complete"
 }
 
