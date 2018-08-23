@@ -1,6 +1,8 @@
 # use MSSQL 2017 image on Ubuntu 16.04
 FROM microsoft/mssql-server-linux:latest
 
+RUN apt-get update && apt-get -y install ca-certificates
+
 # create directory within SQL container for database files
 RUN mkdir -p /opt/dbscripts
 
