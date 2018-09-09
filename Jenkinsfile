@@ -3,7 +3,7 @@ def CONTAINER_TAG="latest"
 def CONTAINER_DB_NAME="people-api-db-pipeline"
 def CONTAINER_DB_TAG="latest"
 def OPENSHIFT_PROJECT_NAME="people-api-pipeline"
-def OPENSHIFT_IP="172.30.1.1:5000"
+def OPENSHIFT_IP="docker-registry-default.apps.192.168.1.54.nip.io"
 
 node {
 
@@ -14,9 +14,9 @@ node {
     stage("Compile Source"){
         try {
             bat "\"C:\\Program Files\\dotnet\\dotnet\" restore"
-            bat "\"C:\\Program Files\\dotnet\\dotnet\" sonarscanner begin /k:\"peopleapi\" /d:sonar.login=\"1d62160d545c0bd72ec48737ba46219a9d0ea4bb\" /d:sonar.host.url=\"http://localhost:9000\""
+            //bat "\"C:\\Program Files\\dotnet\\dotnet\" sonarscanner begin /k:\"peopleapi\" /d:sonar.login=\"1d62160d545c0bd72ec48737ba46219a9d0ea4bb\" /d:sonar.host.url=\"http://localhost:9000\""
             bat "\"C:\\Program Files\\dotnet\\dotnet\" build"
-            bat "\"C:\\Program Files\\dotnet\\dotnet\" sonarscanner end /d:sonar.login=\"1d62160d545c0bd72ec48737ba46219a9d0ea4bb\""
+            //bat "\"C:\\Program Files\\dotnet\\dotnet\" sonarscanner end /d:sonar.login=\"1d62160d545c0bd72ec48737ba46219a9d0ea4bb\""
         } catch(error){
             echo "The .NET Core 2.x compile failed with ${error}"
         }
