@@ -76,5 +76,11 @@ There is a single table for 'Person' that has the following fields in a very, ve
 * Twitter
 * Linkedin
 
+## Jenkinsfile permissions
+You may have to run the below command to allow the jenkins setup within the project to run the actual build config
+```
+oc adm policy add-role-to-user edit system:serviceaccount:peopleapi:default
+```
+
 ## ToDo's still
 * Document better
