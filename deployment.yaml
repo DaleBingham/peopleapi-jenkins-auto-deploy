@@ -1,0 +1,170 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: "peopleapi-template"
+  annotations:
+    description: "Demo People API"
+    iconClass: "icon-dotnet"
+    tags: "dotnet,core"
+labels:
+  application: "peopleapi"
+  createdBy: "peopleapi-template"
+objects:
+  - apiVersion: v1
+    kind: "ImageStream"
+    metadata:
+      name: "peopleapi"
+  - apiVersion: v1
+    kind: "BuildConfig"
+    metadata:
+      name: "peopleapi-bc"
+      annotations:
+        description: "Defines how to build the People API webapi app."
+      labels:
+        app: peopleapi
+      namespace: peopleapi
+    spec:
+      env:
+        - name: "GIT_SSL_NO_VERIFY"
+          value: "true"
+      source:
+        type: "Git"
+        git:
+          ref: ${CONSUMER_GIT_BRANCH}
+          uri: ${CONSUMER_GIT_URL}
+        contextDir: "/"
+      strategy:
+        sourceStrategy:
+          env:
+            - name: DOTNET_STARTUP_PROJECT
+            - name: DOTNET_SDK_VERSION
+            - name: DOTNET_ASSEMBLY_NAME
+            - name: DOTNET_NPM_TOOLS
+            - name: DOTNET_TEST_PROJECTS
+            - name: DOTNET_CONFIGURATION
+              value: Debug
+            - name: DOTNET_RESTORE_SOURCES
+            - name: DOTNET_TOOLS
+            - name: DOTNET_RM_SRC
+              value: 'true'
+          from:
+            kind: ImageStreamTag
+            name: 'dotnet:2.1'
+            namespace: openshift
+        type: Source
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "peopleapi:latest"
+  - apiVersion: v1
+    kind: "BuildConfig"
+    metadata:
+      name: "peopleapi-bc-pipeline"
+    spec:
+      source:
+        git:
+          ref: ${CONSUMER_GIT_BRANCH}
+          uri: ${CONSUMER_GIT_URL}
+        sourceSecret:
+          name: "peopleapi-source-control"
+      strategy:
+        jenkinsPipelineStrategy:
+          jenkinsfilePath: Jenkinsfile
+  - apiVersion: v1
+    kind: "Service"
+    metadata:
+      name: "peopleapi-svc"
+      annotations:
+        description: "Exposes and load balances the application pods"
+    spec:
+      ports:
+        - name: "peopleapi"
+          port: 8080
+          targetPort: 8080
+      selector:
+        name: "peopleapi"
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      annotations:
+        openshift.io/host.generated: 'true'
+      labels:
+        app: peopleapi
+      name: peopleapi
+      namespace: peopleapi
+    spec:
+      host: api-peopleapi.192.168.99.101.nip.io
+      to:
+        kind: Service
+        name: peopleapi-svc
+        weight: 100
+      wildcardPolicy: None
+  - apiVersion: v1
+    kind: "DeploymentConfig"
+    metadata:
+      name: "peopleapi-dc"
+      annotations:
+        description: "Handles deployment of the demo People API application"
+      generation: 2
+      labels:
+        app: peopleapi-template
+        application: peopleapi
+        createdBy: peopleapi-template
+      namespace: peopleapi
+    spec:
+      replicas: 1
+      selector:
+        name: peopleapi
+      strategy:
+        activeDeadlineSeconds: 21600
+        recreateParams:
+          timeoutSeconds: 600
+        resources: {}
+        type: Recreate
+      template:
+        metadata:
+          labels:
+            name: "peopleapi"
+        spec:
+          containers:
+            - name: peopleapi
+              env:
+                - name: ASPNETCORE_ENVIRONMENT
+                  value: Development
+                - name: ASPNETCORE_URLS
+                  value: 'http://*:8080'
+              image: 'peopleapi/peopleapi:latest'
+              imagePullPolicy: IfNotPresent
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+      test: false
+      triggers:
+      - type: "ConfigChange"
+      - type: "ImageChange"
+        imageChangeParams:
+          automatic: true
+          containerNames:
+          - "peopleapi"
+          from:
+            kind: "ImageStreamTag"
+            name: "peopleapi:latest"
+parameters:
+  - name: "CONSUMER_GIT_URL"
+    displayName: "Source Repository URL"
+    description: "The URL of the repository with your application source code"
+    value: "https://github.com/Cingulara/peopleapi-jenkins-auto-deploy.git"
+    required: true
+  - name: "CONSUMER_GIT_BRANCH"
+    displayName: "Source Repository Branch"
+    description: "The branch within the git repository with your application source code"
+    value: "master"
+    required: true
