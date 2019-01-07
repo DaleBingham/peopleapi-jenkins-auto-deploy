@@ -26,6 +26,9 @@ The database container is built using the Dockerfile in the database directory. 
 
 docker run -d -p 1433:1433 --rm --name peopleapi-db peopleapi-db
 
+## OpenShift Template Deploy
+
+Use the latest dotnet core templates referenced here https://access.redhat.com/documentation/en-us/net_core/2.1/html/getting_started_guide/gs_dotnet_on_openshift. You may have to make a secret to access the redhat access registry with your free RH developer account as I did. 
 
 ## API Calls
 
