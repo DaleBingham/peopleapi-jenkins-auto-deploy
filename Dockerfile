@@ -1,6 +1,6 @@
 FROM microsoft/dotnet:2.1.503-sdk AS build-env
 ENV ASPNETCORE_ENVIRONMENT Testing
-WORKDIR /app/
+WORKDIR /app
 
 RUN apt-get update && apt-get -y install ca-certificates
 
