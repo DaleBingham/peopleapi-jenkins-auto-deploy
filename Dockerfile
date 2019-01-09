@@ -14,6 +14,7 @@ RUN dotnet publish -c Release -o out
 
 # build runtime image
 FROM microsoft/dotnet:2.1.7-aspnetcore-runtime
+RUN mkdir /app
 WORKDIR /app
 RUN apt-get update && apt-get -y install ca-certificates
 
