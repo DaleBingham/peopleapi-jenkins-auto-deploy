@@ -15,6 +15,10 @@ objects:
     metadata:
       name: "peopleapi"
   - apiVersion: v1
+    kind: "ImageStream"
+    metadata:
+      name: "peopleapidb"
+  - apiVersion: v1
     kind: "BuildConfig"
     metadata:
       name: "peopleapi-bc"
