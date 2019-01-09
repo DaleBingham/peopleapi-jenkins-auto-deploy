@@ -1,5 +1,5 @@
 # use MSSQL 2017 image on Ubuntu 16.04
-FROM microsoft/mssql-server-linux:latest
+FROM mcr.microsoft.com/mssql/server:latest
 
 RUN apt-get update && apt-get -y install ca-certificates
 
@@ -10,7 +10,7 @@ RUN mkdir -p /opt/dbscripts
 COPY *.sql /opt/dbscripts/
 
 # set environment variables
-ENV MSSQL_SA_PASSWORD=mysapwdn0tGo0d!
+ENV SA_PASSWORD=mysapwdn0tGo0d!
 ENV ACCEPT_EULA=Y
 ENV MSSQL_PID=Express
 
