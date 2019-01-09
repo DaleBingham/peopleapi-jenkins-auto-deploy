@@ -223,11 +223,18 @@ objects:
               resources: {}
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
+            volumeMounts:
+              - mountPath: /var/opt/mssql
+                name: mssql-data
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
           securityContext: {}
           terminationGracePeriodSeconds: 30
+        volumes:
+        - name: mssql-data
+          persistentVolumeClaim:
+            claimName: mssql-peopleapidb-data
       test: false
       triggers:
       - type: "ConfigChange"
@@ -239,6 +246,16 @@ objects:
           from:
             kind: "ImageStreamTag"
             name: "peopleapidb:latest"
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: mssql-peopleapidb-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: ${MSSQL_VOLUME_CAPACITY}
 parameters:
   - name: "CONSUMER_GIT_URL"
     displayName: "Source Repository URL"
@@ -255,4 +272,8 @@ parameters:
     description: "The database connection string for the peopleapidb database for this API"
     value: "server=peopleapidb; user id=peopleAPI; password=myP@ssw0rd; initial catalog=peopleAPI;"
     required: true
-    
+  - name: MSSQL_VOLUME_CAPACITY
+    description: Volume space available for MSSQL
+    displayName: MSSQL Volume Capacity
+    required: true
+    value: 1Gi
