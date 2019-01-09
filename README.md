@@ -30,6 +30,15 @@ docker run -d -p 1433:1433 --rm --name peopleapi-db peopleapi-db
 
 Use the latest dotnet core templates referenced here https://access.redhat.com/documentation/en-us/net_core/2.1/html/getting_started_guide/gs_dotnet_on_openshift. You may have to make a secret to access the redhat access registry with your free RH developer account as I did. 
 
+Then you can run the following commands or just copy the template into the "import" form in OpenShift
+
+```
+oc new-project peopleapi --display-name="Demo - People API" --description="https://github.com/Cingulara/peopleapi-jenkins-auto-deploy"
+
+oc new-app -f ./deployment.yaml 
+```
+
+
 ## API Calls
 
 GET http://localhost:xxxx/swagger/ gives you the Swagger API documentation generated from the Person Controller where xxxx is the port 5000 or whatever you set it to be.
