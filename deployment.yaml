@@ -62,10 +62,10 @@ objects:
         git:
           ref: ${CONSUMER_GIT_BRANCH}
           uri: ${CONSUMER_GIT_URL}
-        contextDir: "/"
+        contextDir: "database"
       strategy:
         dockerStrategy:
-          dockerfilePath: database/Dockerfile
+          dockerfilePath: Dockerfile
       output:
         to:
           kind: "ImageStreamTag"
