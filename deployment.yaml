@@ -34,28 +34,38 @@ objects:
           uri: ${CONSUMER_GIT_URL}
         contextDir: "/"
       strategy:
-        sourceStrategy:
-          env:
-            - name: DOTNET_STARTUP_PROJECT
-            - name: DOTNET_SDK_VERSION
-            - name: DOTNET_ASSEMBLY_NAME
-            - name: DOTNET_NPM_TOOLS
-            - name: DOTNET_TEST_PROJECTS
-            - name: DOTNET_CONFIGURATION
-              value: Debug
-            - name: DOTNET_RESTORE_SOURCES
-            - name: DOTNET_TOOLS
-            - name: DOTNET_RM_SRC
-              value: 'true'
-          from:
-            kind: ImageStreamTag
-            name: 'dotnet:2.1'
-            namespace: openshift
-        type: Source
+        dockerStrategy:
+          dockerfilePath: Dockerfile
       output:
         to:
           kind: "ImageStreamTag"
           name: "peopleapi:latest"
+  - apiVersion: v1
+    kind: "BuildConfig"
+    metadata:
+      name: "peopleapidb-bc"
+      annotations:
+        description: "Defines how to build the People API database."
+      labels:
+        app: peopleapidb
+      namespace: peopleapi
+    spec:
+      env:
+        - name: "GIT_SSL_NO_VERIFY"
+          value: "true"
+      source:
+        type: "Git"
+        git:
+          ref: ${CONSUMER_GIT_BRANCH}
+          uri: ${CONSUMER_GIT_URL}
+        contextDir: "/"
+      strategy:
+        dockerStrategy:
+          dockerfilePath: database/Dockerfile
+      output:
+        to:
+          kind: "ImageStreamTag"
+          name: "peopleapidb:latest"
   - apiVersion: v1
     kind: "BuildConfig"
     metadata:
