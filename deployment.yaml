@@ -98,6 +98,19 @@ objects:
       selector:
         name: "peopleapi"
   - apiVersion: v1
+    kind: "Service"
+    metadata:
+      name: "peopleapidb-svc"
+      annotations:
+        description: "Exposes the application database"
+    spec:
+      ports:
+        - name: "peopleapidb"
+          port: 1433
+          targetPort: 1433
+      selector:
+        name: "peopleapidb"
+  - apiVersion: v1
     kind: Route
     metadata:
       annotations:
