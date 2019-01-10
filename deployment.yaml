@@ -120,7 +120,6 @@ objects:
       name: peopleapi
       namespace: peopleapi
     spec:
-      host: api-peopleapi.192.168.99.101.nip.io
       to:
         kind: Service
         name: peopleapi-svc
@@ -223,18 +222,18 @@ objects:
               resources: {}
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
-            volumeMounts:
-              - mountPath: /var/opt/mssql
-                name: mssql-data
+              volumeMounts:
+                - mountPath: /var/opt/mssql
+                  name: mssql-data
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
           securityContext: {}
           terminationGracePeriodSeconds: 30
-        volumes:
-        - name: mssql-data
-          persistentVolumeClaim:
-            claimName: mssql-peopleapidb-data
+          volumes:
+            - name: mssql-data
+              persistentVolumeClaim:
+                claimName: mssql-peopleapidb-data
       test: false
       triggers:
       - type: "ConfigChange"
